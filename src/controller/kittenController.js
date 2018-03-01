@@ -11,6 +11,10 @@ export default class KittenController {
         this.httpStatusService = new HttpStatusService();
     }
 
+    index(req, res) {
+        res.render('index');
+    }
+
     getKittens(req, res) {
         this.kittenRepository.getKittens()
             .then(kittens => this.sendJsonResponse(res, this.httpStatusService.ok, kittens))

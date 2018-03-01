@@ -48,6 +48,14 @@ export default class kittenRepository {
         });
     }
 
+    killKitten(name) {
+        return new Promise((resolve, reject) => {
+            this.kittenModel.remove({name: name})
+                .then(msg => resolve(msg))
+                .catch(err => reject(err));
+        });
+    }
+
     addFlea(kittenName, fleaName) {
         return new Promise((resolve, reject) => {
             this.getKittenByName(kittenName).then(kitten => {
@@ -116,13 +124,5 @@ export default class kittenRepository {
         } else {
             return false;
         }
-    }
-
-    killKitten(name) {
-        return new Promise((resolve, reject) => {
-            this.kittenModel.remove({name: name})
-                .then(msg => resolve(msg))
-                .catch(err => reject(err));
-        });
     }
 }

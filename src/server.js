@@ -26,6 +26,7 @@ export default class Server {
     {
         const kittenController = new KittenController();
 
+        this._app.get('/', kittenController.index.bind(kittenController));
         this._app.get('/kittens', kittenController.getKittens.bind(kittenController));
         this._app.post('/kittens/create', kittenController.createKitten.bind(kittenController));
         this._app.post('/kittens/get', kittenController.getKittenByName.bind(kittenController));
