@@ -1,22 +1,24 @@
 import mongoose from 'mongoose';
+import FleaModel from './fleaModel';
 
-mongoose.Promise = global.Promise;
+const fleaModel = FleaModel.usualSchema;
 
 const Schema = mongoose.Schema;
 
 const KittenSchema = new Schema(
     {
-        name: {type: String, required: true},
-        weight: {type: String, required: true},
-        birth: {type: Date, required: false},
-        colors: [{
+        name: {type: String, required: true, unique: true},
+        weight: {type: Number, required: true},
+        birth: {type: Date},
+        colors: {
             primary: {type: String},
             secondary: {type: String}
-        }]
+        },
+        fleas: [{type: fleaModel, unique: true}]
     });
 
 KittenSchema.methods.speak = () => {
-    console.log(this.name);
+    console.log(`My name is ${this.name}`);
 };
 
 module.exports = mongoose.model('Kitten', KittenSchema);

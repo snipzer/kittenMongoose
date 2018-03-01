@@ -4,15 +4,13 @@ export default class mongooseHandler
 {
     constructor()
     {
-
+        Mongoose.Promise = global.Promise;
         this.mongoose = Mongoose;
-
-
+        this.mongoose.set('debug', true);
     }
 
     connect() {
         return new Promise((resolve, reject) => {
-            Mongoose.Promise = global.Promise;
             let dbConnect;
             if(process.env.ENV === 'production') {
                 dbConnect = `mongodb://${ process.env.DB_USER }:${ process.env.DB_PASSWORD }@${ process.env.DB_HOST }:${ process.env.DB_PORT }/${ process.env.DB_NAME }`
@@ -23,8 +21,7 @@ export default class mongooseHandler
                 keepAlive: true,
                 reconnectTries: Number.MAX_VALUE,
                 useMongoClient: true
-            }, err =>
-            {
+            }, err => {
                 if(err)
                     reject(err);
                 else

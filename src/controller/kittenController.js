@@ -17,21 +17,81 @@ export default class KittenController {
             .catch(err => this.sendJsonResponse(res, this.httpStatusService.internalServerError, err));
     }
 
-    getKittenById(req, res) {
-        console.log(req.params.id);
-        this.kittenRepository.getKittenById(req.params.id)
+    getKittenByName(req, res) {
+        this.kittenRepository.getKittenByName(req.body.name)
             .then(kitten => this.sendJsonResponse(res, this.httpStatusService.ok, kitten))
             .catch(err => this.sendJsonResponse(res, this.httpStatusService.internalServerError, err));
     }
 
     createKitten(req, res) {
-        this.kittenRepository.createKitten()
+        try {
+            const kitten = this.verifyNewKitten(
+                req.body.name,
+                req.body.weight,
+                req.body.birth,
+                req.body.primaryColor,
+                req.body.secondaryColor
+            );
+            this.kittenRepository.createKitten(kitten)
+                .then(kitten => this.sendJsonResponse(res, this.httpStatusService.ok, kitten))
+                .catch(err => this.sendJsonResponse(res, this.httpStatusService.internalServerError, err));
+        } catch(err) {
+            this.sendJsonResponse(res, this.httpStatusService.internalServerError, {message: err.message})
+        }
+    }
+
+    updateKitten(req, res) {
+        let object = this.prepareKittenUpdate(req.body.weight, req.body.primaryColor, req.body.secondaryColor);
+        this.kittenRepository.updateKitten(req.body.name, object)
             .then(kitten => this.sendJsonResponse(res, this.httpStatusService.ok, kitten))
             .catch(err => this.sendJsonResponse(res, this.httpStatusService.internalServerError, err));
+    }
+
+    killKitten(req, res) {
+        this.kittenRepository.killKitten(req.body.name)
+            .then(msg => this.sendJsonResponse(res, this.httpStatusService.ok, msg))
+            .catch(err => this.sendJsonResponse(res, this.httpStatusService.internalServerError, err))
+    }
+
+    addFlea(req, res) {
+        this.kittenRepository.addFlea(req.body.kittenName, req.body.fleaName)
+            .then(kitten => this.sendJsonResponse(res, this.httpStatusService.ok, kitten))
+            .catch(err => this.sendJsonResponse(res, this.httpStatusService.internalServerError, err));
+    }
+
+    removeFlea(req, res) {
+        this.kittenRepository.removeFlea(req.body.kittenName, req.body.fleaName)
+            .then(kitten => this.sendJsonResponse(res, this.httpStatusService.ok, kitten))
+            .catch(err => this.sendJsonResponse(res, this.httpStatusService.internalServerError, err))
     }
 
     sendJsonResponse(res, code, content) {
         res.status(code);
         res.json(content);
+    }
+
+    verifyNewKitten(name, weight, birth, primaryColor, secondaryColor) {
+        if(_.isUndefined(name))
+            throw new Error('Erreur, le nom est requis et doit être une string');
+        if(_.isUndefined(weight))
+            throw new Error('Erreur, le poid est requis et doit être un nombre');
+        return {
+            name: name.trim(),
+            weight: parseInt(weight.trim(), 10),
+            birth: (_.isUndefined(birth) || !birth instanceof Date)? new Date(): birth,
+            colors: {
+                primary: (_.isUndefined(primaryColor) || typeof primaryColor !== 'string')? '': primaryColor.trim(),
+                secondary: (_.isUndefined(secondaryColor) || typeof secondaryColor !== 'string')? '': secondaryColor.trim()
+            },
+            fleas: []
+        };
+    }
+
+    prepareKittenUpdate(weight, primaryColor, secondaryColor) {
+        return {
+            weight: (_.isUndefined(weight) || _.isEmpty(weight.trim()))? null : parseInt(weight.trim(), 10),
+            primaryColor: (_.isUndefined(primaryColor) || _.isEmpty(primaryColor.trim()))? null : primaryColor.trim(),
+            secondaryColor: (_.isUndefined(secondaryColor) || _.isEmpty(secondaryColor.trim()))? null: secondaryColor.trim()
+        }
     }
 }

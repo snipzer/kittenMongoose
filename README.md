@@ -1,4 +1,4 @@
-# email-campaign
+# KittenMongoose
 
 A school project to learn restful API's
 
@@ -6,26 +6,20 @@ A school project to learn restful API's
 
 - NodeJs
 - NPM
-- Docker
-- Docker-compose
+- MongoDB
 
 ## Installation
 
-- Clone repository : `git clone https://github.com/Pochwar/email-campaign.git`
+- Clone repository : `git clone git@github.com:snipzer/kittenMongoose.git`
 - Copy `.env.exemple` to `.env`
 
 
-### Method 1 - Full Docker
-- In `.env`, set `DB_HOST` to `mongo` and `PORT` to `3000`
-- Run `docker-compose up`
-- View App at `http://localhost:3000`
+### Start server
 
-### Method 2 - Node & Docker
-- Run `docker-compose -f dc-mongo.yml up` to launch mongo container
-- In `.env`, set `DB_HOST` to `0.0.0.0`
+- In `.env`, set `DB_HOST` to your `databaseAdresse`
 - Run `npm install` to install packages
-- Run `npm run build` to build App
-- Run `npm run launch` to launch App OR run `npm run dev` to launch App with hot reload
+- Run `npm run build:watch` to build App
+- Run `npm start` to launch App
 - View App at `http://localhost:3000`
 
 ## Documentation

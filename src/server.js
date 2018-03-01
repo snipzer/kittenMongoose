@@ -27,8 +27,12 @@ export default class Server {
         const kittenController = new KittenController();
 
         this._app.get('/kittens', kittenController.getKittens.bind(kittenController));
-        this._app.get('/kittens/:id', kittenController.getKittenById.bind(kittenController));
-        this._app.get('/kitten/create', kittenController.createKitten.bind(kittenController));
+        this._app.post('/kittens/create', kittenController.createKitten.bind(kittenController));
+        this._app.post('/kittens/get', kittenController.getKittenByName.bind(kittenController));
+        this._app.put('/kittens/update', kittenController.updateKitten.bind(kittenController));
+        this._app.delete('/kittens/delete', kittenController.killKitten.bind(kittenController));
+        this._app.put('/kittens/flea/add', kittenController.addFlea.bind(kittenController));
+        this._app.put('/kittens/flea/remove', kittenController.removeFlea.bind(kittenController));
     }
 
     run()
