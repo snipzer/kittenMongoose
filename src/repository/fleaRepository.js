@@ -2,12 +2,12 @@ import FleaModel from "../models/fleaModel";
 
 export default class fleaRepository {
     constructor() {
-        this.speciesModel = FleaModel.mongooseSchema;
+        this.fleaModel = FleaModel.mongooseSchema;
     }
 
     getFleas() {
         return new Promise((resolve, reject) => {
-            this.speciesModel.find({})
+            this.fleaModel.find({})
                 .then(fleas => resolve(fleas))
                 .catch(err => reject(err));
         });
@@ -15,7 +15,7 @@ export default class fleaRepository {
 
     getFleaByName(name) {
         return new Promise((resolve, reject) => {
-            this.speciesModel.findOne({name: name})
+            this.fleaModel.findOne({fleaName: name})
                 .then(flea => resolve(flea))
                 .catch(err => reject(err));
         });
@@ -23,7 +23,7 @@ export default class fleaRepository {
 
     createFlea(name) {
         return new Promise((resolve, reject) => {
-            this.speciesModel.create({name: name, number: 0})
+            this.fleaModel.create({fleaName: name, number: 0})
                 .then(flea => resolve(flea))
                 .catch(err => reject(err));
         });
@@ -31,7 +31,7 @@ export default class fleaRepository {
 
     killFlea(name) {
         return new Promise((resolve, reject) => {
-            this.speciesModel.remove({name: name})
+            this.fleaModel.remove({fleaName: name})
                 .then(msg => resolve(msg))
                 .catch(err => reject(err));
         });

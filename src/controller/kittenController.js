@@ -75,6 +75,16 @@ export default class KittenController {
         res.json(content);
     }
 
+    genocide(req, res) {
+        if(_.isUndefined(req.body.id)) {
+            this.sendJsonResponse(res, this.httpStatusService.internalServerError, {error: 'Species id est requis'})
+        } else {
+            this.kittenRepository.launchGenocide(req.body.id)
+                .then(result => this.sendJsonResponse(res, this.httpStatusService.ok, result))
+                .catch(err => this.sendJsonResponse(res, this.httpStatusService.internalServerError, err));
+        }
+    }
+
     verifyNewKitten(name, weight, birth, primaryColor, secondaryColor, speciesName) {
         if(_.isUndefined(name))
             throw new Error('Erreur, le nom est requis et doit être une string');
@@ -90,7 +100,7 @@ export default class KittenController {
                 primary: (_.isUndefined(primaryColor) || typeof primaryColor !== 'string')? '': primaryColor.trim(),
                 secondary: (_.isUndefined(secondaryColor) || typeof secondaryColor !== 'string')? '': secondaryColor.trim()
             },
-            fleas: []
+            fleas: [],
         }, speciesName.trim()];
     }
 

@@ -106,7 +106,7 @@ export default class kittenRepository {
     }
 
     infestKitten(kitten, flea) {
-        const index = kitten.fleas.findIndex(fleaInArray => fleaInArray.name === flea.name);
+        const index = kitten.fleas.findIndex(fleaInArray => fleaInArray.fleaName === flea.fleaName);
         if (index === -1) {
             kitten.fleas.push(flea);
             return true
@@ -134,7 +134,7 @@ export default class kittenRepository {
     }
 
     vermifugeKitten(kitten, fleaName) {
-        const index = kitten.fleas.findIndex(fleaInArray => fleaInArray.name === fleaName);
+        const index = kitten.fleas.findIndex(fleaInArray => fleaInArray.fleaName === fleaName);
         if (index !== -1) {
             kitten.fleas.splice(index, 1);
             return true
@@ -154,9 +154,8 @@ export default class kittenRepository {
                             result.names = [];
                             kittens.forEach(kitten => {
                                 let name = kitten.name;
-                                this.killKitten(kitten.name).then(() => {
-                                    result.names.push(name);
-                                }).catch(err => console.log(err));
+                                result.names.push(name);
+                                this.killKitten(kitten.name).then(() => {}).catch(err => console.log(err));
                             });
                             resolve(result);
                         }).catch(err => reject(err));

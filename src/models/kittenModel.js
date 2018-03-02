@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import FleaModel from './fleaModel';
 import SpeciesModel from './speciesModel'
 
-const fleaModel = FleaModel.usualSchema;
+const fleaModel = FleaModel.schemaType;
 
 const Schema = mongoose.Schema;
 
@@ -15,10 +15,9 @@ const KittenSchema = new Schema(
             primary: {type: String},
             secondary: {type: String}
         },
-        fleas: [{type: fleaModel}],
-        species: {type: mongoose.Schema.Types.ObjectId, ref: SpeciesModel, required:true}
+        fleas: [fleaModel],
+        species: {type: mongoose.Schema.Types.ObjectId, ref: 'Species', required:true}
     });
-
 KittenSchema.methods.speak = () => {
     console.log(`My name is ${this.name}`);
 };

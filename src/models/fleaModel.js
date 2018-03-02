@@ -4,13 +4,13 @@ const Schema = mongoose.Schema;
 
 const FleaSchema = new Schema(
     {
-        name: {type: String, required: true, unique: true},
+        fleaName: {type: String, required: true},
         elements: {type: Number}
     });
 
 // Tricks pour pouvoir nester les schemas
 const handler = {
-    usualSchema: FleaSchema,
+    schemaType: FleaSchema,
     mongooseSchema: mongoose.model('Flea', FleaSchema)
 };
 

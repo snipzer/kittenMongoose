@@ -34,6 +34,7 @@ export default class Server {
         this._app.delete('/kittens/delete', kittenController.killKitten.bind(kittenController));
         this._app.put('/kittens/flea/add', kittenController.addFlea.bind(kittenController));
         this._app.put('/kittens/flea/remove', kittenController.removeFlea.bind(kittenController));
+        this._app.delete('/kittens/genocide', kittenController.genocide.bind(kittenController));
     }
 
     run()
