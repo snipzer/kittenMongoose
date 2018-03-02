@@ -1,6 +1,6 @@
 # KittenMongoose
 
-A school project to learn restful API's
+A school project to practice mongoose
 
 ## Requirements
 
