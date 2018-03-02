@@ -10,7 +10,6 @@
     "build:watch": "./node_modules/.bin/babel --watch src/ --out-dir build/"
   },
   "dependencies": {
-    "apidoc": "^0.17.5",
     "babel-cli": "^6.24.1",
     "babel-core": "^6.26.0",
     "babel-preset-es2015": "^6.24.1",

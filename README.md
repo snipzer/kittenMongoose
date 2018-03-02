@@ -21,7 +21,3 @@ A school project to practice mongoose
 - Run `npm run build:watch` to build App
 - Run `npm start` to launch App
 - View App at `http://localhost:3000`
-
-## Documentation
-
-- Generate the doc with Apidoc, run `apidoc -i src doc`
