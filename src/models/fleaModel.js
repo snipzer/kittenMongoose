@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const FleaSchema = new Schema(
     {
         name: {type: String, required: true, unique: true},
+        elements: {type: Number}
     });
 
 // Tricks pour pouvoir nester les schemas

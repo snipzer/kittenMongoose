@@ -29,14 +29,15 @@ export default class KittenController {
 
     createKitten(req, res) {
         try {
-            const kitten = this.verifyNewKitten(
+            const information = this.verifyNewKitten(
                 req.body.name,
                 req.body.weight,
                 req.body.birth,
                 req.body.primaryColor,
-                req.body.secondaryColor
+                req.body.secondaryColor,
+                req.body.speciesName
             );
-            this.kittenRepository.createKitten(kitten)
+            this.kittenRepository.createKitten(information[0], information[1])
                 .then(kitten => this.sendJsonResponse(res, this.httpStatusService.ok, kitten))
                 .catch(err => this.sendJsonResponse(res, this.httpStatusService.internalServerError, err));
         } catch(err) {
@@ -58,7 +59,7 @@ export default class KittenController {
     }
 
     addFlea(req, res) {
-        this.kittenRepository.addFlea(req.body.kittenName, req.body.fleaName)
+        this.kittenRepository.addFlea(req.body.kittenName, req.body.fleaName, req.body.fleaNumber)
             .then(kitten => this.sendJsonResponse(res, this.httpStatusService.ok, kitten))
             .catch(err => this.sendJsonResponse(res, this.httpStatusService.internalServerError, err));
     }
@@ -74,12 +75,14 @@ export default class KittenController {
         res.json(content);
     }
 
-    verifyNewKitten(name, weight, birth, primaryColor, secondaryColor) {
+    verifyNewKitten(name, weight, birth, primaryColor, secondaryColor, speciesName) {
         if(_.isUndefined(name))
             throw new Error('Erreur, le nom est requis et doit être une string');
         if(_.isUndefined(weight))
             throw new Error('Erreur, le poid est requis et doit être un nombre');
-        return {
+        if(_.isUndefined(speciesName))
+            throw new Error('Erreur, l\'espèce est requise');
+        return [{
             name: name.trim(),
             weight: parseInt(weight.trim(), 10),
             birth: (_.isUndefined(birth) || !birth instanceof Date)? new Date(): birth,
@@ -88,7 +91,7 @@ export default class KittenController {
                 secondary: (_.isUndefined(secondaryColor) || typeof secondaryColor !== 'string')? '': secondaryColor.trim()
             },
             fleas: []
-        };
+        }, speciesName.trim()];
     }
 
     prepareKittenUpdate(weight, primaryColor, secondaryColor) {

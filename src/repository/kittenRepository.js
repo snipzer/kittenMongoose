@@ -1,11 +1,13 @@
 import KittenModel from "../models/kittenModel";
 import FleaRepository from "./fleaRepository";
+import SpeciesRepository from "./speciesRepository";
 import _ from "underscore";
 
 export default class kittenRepository {
     constructor() {
         this.kittenModel = KittenModel;
         this.fleaRepository = new FleaRepository();
+        this.speciesRepository = new SpeciesRepository();
     }
 
     getKittens() {
@@ -24,11 +26,24 @@ export default class kittenRepository {
         });
     }
 
-    createKitten(kitten) {
+    createKitten(kitten, specieName) {
         return new Promise((resolve, reject) => {
-            this.kittenModel.create(kitten)
-                .then(kitten => resolve(kitten))
-                .catch(err => reject(err));
+            this.speciesRepository.getSpecieByName(specieName)
+                .then(specie => {
+                    if(specie === null) {
+                        this.speciesRepository.createSpecie(specieName).then(newSpecie => {
+                            kitten.species = newSpecie._id;
+                            this.kittenModel.create(kitten)
+                                .then(kitten => resolve(kitten))
+                                .catch(err => reject(err));
+                        }).catch(err => reject(err));
+                    } else {
+                        kitten.species = specie._id;
+                        this.kittenModel.create(kitten)
+                            .then(kitten => resolve(kitten))
+                            .catch(err => reject(err));
+                    }
+                }).catch(err => reject(err));
         });
     }
 
@@ -56,13 +71,14 @@ export default class kittenRepository {
         });
     }
 
-    addFlea(kittenName, fleaName) {
+    addFlea(kittenName, fleaName, fleaNumber) {
         return new Promise((resolve, reject) => {
             this.getKittenByName(kittenName).then(kitten => {
                 if(!_.isNull(kitten)) {
                     this.fleaRepository.getFleaByName(fleaName).then(flea => {
                         if(_.isNull(flea)) {
                             this.fleaRepository.createFlea(fleaName).then(flea => {
+                                flea.elements = fleaNumber;
                                 if(this.infestKitten(kitten, flea)) {
                                     kitten.save()
                                         .then(kitten => resolve(kitten))
@@ -72,6 +88,7 @@ export default class kittenRepository {
                                 }
                             }).catch(err => reject(err));
                         } else {
+                            flea.elements = fleaNumber;
                             if(this.infestKitten(kitten, flea)) {
                                 kitten.save().then(kitten => {
                                     resolve(kitten);
@@ -124,5 +141,26 @@ export default class kittenRepository {
         } else {
             return false;
         }
+    }
+
+    launchGenocide(id) {
+        return new Promise((resolve, reject) => {
+            this.speciesRepository.speciesModel.remove({_id: id})
+                .then(() => {
+                    this.kittenModel.find({species: id})
+                        .then(kittens => {
+                            let result = {};
+                            result.message = "This kittens died by your sadism, are you happy ?";
+                            result.names = [];
+                            kittens.forEach(kitten => {
+                                let name = kitten.name;
+                                this.killKitten(kitten.name).then(() => {
+                                    result.names.push(name);
+                                }).catch(err => console.log(err));
+                            });
+                            resolve(result);
+                        }).catch(err => reject(err));
+                }).catch(err => reject(err));
+        });
     }
 }
